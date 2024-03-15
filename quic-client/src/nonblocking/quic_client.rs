@@ -110,7 +110,7 @@ impl QuicLazyInitializedEndpoint {
             )
             .expect("QuicLazyInitializedEndpoint::create_endpoint bind_in_range")
             .1;
-
+            info!("QuicLazyInitializedEndpoint endpoint created client_socket: {:?}", client_socket);
             QuicNewConnection::create_endpoint(EndpointConfig::default(), client_socket)
         };
 
