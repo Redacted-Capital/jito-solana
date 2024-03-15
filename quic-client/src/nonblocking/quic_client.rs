@@ -182,7 +182,7 @@ impl QuicNewConnection {
         get_endpoint_measure.stop();
         info!(
             "QuicNewConnection::make_connection get_endpoint_measure: {:?} for addr: {:?}",
-            get_endpoint_measure, addr
+            get_endpoint_measure.as_s(), addr
         );
 
         let mut connecting_measure = Measure::start("connecting_measure");
@@ -190,7 +190,7 @@ impl QuicNewConnection {
         connecting_measure.stop();
         info!(
             "QuicNewConnection::make_connection connecting_measure: {:?} for addr: {:?}",
-            connecting_measure, addr
+            connecting_measure.as_s(), addr
         );
         stats.total_connections.fetch_add(1, Ordering::Relaxed);
         if let Ok(connecting_result) = timeout(QUIC_CONNECTION_HANDSHAKE_TIMEOUT, connecting).await
