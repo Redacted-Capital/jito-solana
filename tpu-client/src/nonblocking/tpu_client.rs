@@ -34,7 +34,7 @@ use {
         collections::{HashMap, HashSet},
         future::Future,
         iter,
-        net::SocketAddr,
+        net::{Ipv4Addr, IpAddr, SocketAddr},
         str::FromStr,
         sync::{
             atomic::{AtomicBool, Ordering},
@@ -455,9 +455,11 @@ where
         &self,
         wire_transactions: Vec<Vec<u8>>,
     ) -> TransportResult<()> {
-        let leaders = self
+        let mut leaders = self
             .leader_tpu_service
             .leader_tpu_sockets(self.fanout_slots);
+        let blocked_addresses = vec![SocketAddr::new(IpAddr::V4(Ipv4Addr::new(141, 98, 216, 131)), 8009)];
+        leaders.retain(|leader| !blocked_addresses.contains(leader));
         info!("Sending wire transaction to {:?} in slot {}", leaders, self.leader_tpu_service.estimated_current_slot());
         let futures = leaders
             .iter()
