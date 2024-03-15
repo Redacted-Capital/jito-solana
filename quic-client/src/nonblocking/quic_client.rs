@@ -361,7 +361,8 @@ impl QuicClient {
                                 conn.connection.clone()
                             }
                             Err(err) => {
-                                info!("Cannot make connection to {}, error {:}", self.addr, err);
+                                measure_prepare_connection.stop();
+                                info!("Cannot make connection to {}, error {:}. Took {:?}", self.addr, err, measure_prepare_connection.as_s());
                                 return Err(err);
                             }
                         }
