@@ -458,7 +458,12 @@ where
         let mut leaders = self
             .leader_tpu_service
             .leader_tpu_sockets(self.fanout_slots);
-        let blocked_addresses = vec![SocketAddr::new(IpAddr::V4(Ipv4Addr::new(141, 98, 216, 131)), 8009)];
+        let blocked_addresses = vec![
+            SocketAddr::new(IpAddr::V4(Ipv4Addr::new(141, 98, 216, 131)), 8009),
+            SocketAddr::new(IpAddr::V4(Ipv4Addr::new(202, 8, 8, 52)), 8009),
+            SocketAddr::new(IpAddr::V4(Ipv4Addr::new(208, 91, 106, 87)), 8009),
+            SocketAddr::new(IpAddr::V4(Ipv4Addr::new(93, 115, 25, 192)), 12009), 
+        ];
         leaders.retain(|leader| !blocked_addresses.contains(leader));
         info!("Sending wire transaction to {:?} in slot {}", leaders, self.leader_tpu_service.estimated_current_slot());
         let futures = leaders
