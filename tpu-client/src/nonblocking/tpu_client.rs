@@ -458,6 +458,7 @@ where
         let leaders = self
             .leader_tpu_service
             .leader_tpu_sockets(self.fanout_slots);
+        info!("Sending wire transaction to {:?} in slot {}", leaders, self.leader_tpu_service.estimated_current_slot());
         let futures = leaders
             .iter()
             .map(|addr| {
