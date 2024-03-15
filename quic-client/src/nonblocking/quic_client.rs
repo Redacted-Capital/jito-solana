@@ -177,9 +177,21 @@ impl QuicNewConnection {
         stats: &ClientStats,
     ) -> Result<Self, QuicError> {
         let mut make_connection_measure = Measure::start("make_connection_measure");
+        let mut get_endpoint_measure = Measure::start("get_endpoint_measure");
         let endpoint = endpoint.get_endpoint().await;
+        get_endpoint_measure.stop();
+        info!(
+            "QuicNewConnection::make_connection get_endpoint_measure: {:?} for addr: {:?}",
+            get_endpoint_measure, addr
+        );
 
+        let mut connecting_measure = Measure::start("connecting_measure");
         let connecting = endpoint.connect(addr, "connect")?;
+        connecting_measure.stop();
+        info!(
+            "QuicNewConnection::make_connection connecting_measure: {:?} for addr: {:?}",
+            connecting_measure, addr
+        );
         stats.total_connections.fetch_add(1, Ordering::Relaxed);
         if let Ok(connecting_result) = timeout(QUIC_CONNECTION_HANDSHAKE_TIMEOUT, connecting).await
         {
